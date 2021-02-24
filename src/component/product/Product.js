@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { prodctUrl } from '../../utils/constants/urlConstan'
 import axios from 'axios';
+import { get } from '../../services/httpService'
 import {
     DataGrid
 } from '@material-ui/data-grid';
@@ -22,15 +24,17 @@ function Product() {
     let [product, setProduct] = useState([]);
     const [post, setpost] = useState([])
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/getAllProducts`)
-            .then(
-                res => {
-                    console.log(res.data.data);
-                    setpost(res.data.data);
-                }
-            ).catch(err => {
-                console.log(err)
-            })
+        get(prodctUrl.GetALLProduct).then(data => {
+            if (data.success) {
+                console.log(data.data);
+                setProduct(data.data);
+            }
+        });
+        // console.log();
+        // if (result != null) {
+        //     console.log(result.data);
+        //     setProduct(result.data)
+        // }
     }, [])
 
 
@@ -102,7 +106,7 @@ function Product() {
 
             </div>
             <div className='productdata-outer-div'>
-                <DataGrid rows={post} columns={columns} pageSize={20} columnBuffer={2} checkboxSelection />
+                <DataGrid rows={product} columns={columns} pageSize={20} columnBuffer={2} checkboxSelection />
                 <h1>{post.TotalGst}</h1>
             </div>
 

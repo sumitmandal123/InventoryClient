@@ -3,8 +3,9 @@ import Link from '@material-ui/core/Link'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid';
+import { addNewData } from '../../services/httpService'
 import { useForm, Form } from '../Shared/useForm';
+import { prodctUrl } from '../../utils/constants/urlConstan'
 
 
 
@@ -69,6 +70,8 @@ function ProductAdd() {
         if (validate()) {
             console.log(values);
             resetForm()
+            addNewData(prodctUrl.AddProductUrl, values, 'productAdded successfully')
+                .then(data => console.log(data));
         }
     }
 
@@ -108,7 +111,7 @@ function ProductAdd() {
                             onChange={handleInputChange} value={values.Discount} />
                         <TextField id="txtCGST" label="CGST(%)" type="number" name='CGST'
                             onChange={handleInputChange} value={values.CGST} />
-                        <TextField id="txtSGST" label="SGST(%)" type="number" name='CGST'
+                        <TextField id="txtSGST" label="SGST(%)" type="number" name='SGST'
                             onChange={handleInputChange} value={values.SGST} />
                     </Form>
                 </div>
