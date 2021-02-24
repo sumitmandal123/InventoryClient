@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Link from '@material-ui/core/Link'
+import { get } from '../../services/httpService'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 import { addNewData } from '../../services/httpService'
 import { useForm, Form } from '../Shared/useForm';
 import { prodctUrl } from '../../utils/constants/urlConstan'
+import { useParams } from "react-router-dom";
 
 
 
@@ -33,7 +35,10 @@ const initialFValues = {
 
 function ProductAdd() {
 
+    const { id } = useParams();
     const classes = useStyles();
+    const [isEdit, setIsEdit] = useState(false)
+    const [addEditButtontext, setAddEditButtontext] = useState('Add');
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('Barcode' in fieldValues)
@@ -69,11 +74,36 @@ function ProductAdd() {
         event.preventDefault()
         if (validate()) {
             console.log(values);
-            resetForm()
-            addNewData(prodctUrl.AddProductUrl, values, 'productAdded successfully')
-                .then(data => console.log(data));
+
+            const msg = isEdit ? 'product Update Successfully' : 'productAdded successfully'
+            const url = isEdit ? prodctUrl.SaveEditProduct : prodctUrl.AddProductUrl
+            addNewData(url, values, msg)
+                .then(data => {
+                    if (!isEdit)
+                        resetForm()
+                    else
+                        setValues(data.data)
+                });
         }
     }
+
+
+    const fillUpProductDetails = (userId) => {
+        get(prodctUrl.GetProductById + userId).then(data => {
+            if (data && data.success) {
+                console.log(data.data);
+                setValues(data.data);
+            }
+        });
+        setIsEdit(true);
+        setAddEditButtontext('Update');
+    }
+
+    useEffect(() => {
+        if (id != undefined || id != null) {
+            fillUpProductDetails(id);
+        }
+    }, [])
 
 
 
@@ -116,9 +146,9 @@ function ProductAdd() {
                     </Form>
                 </div>
                 <div className={`productAdd-buttons ${classes.root}`}>
-                    <Button variant="contained" color='secondary' onClick={onProductSave} >Add</Button>
-                    <Button variant="contained" color='primary'> Reset</Button>
-                    <Button variant="contained" color='primary'> Reset</Button>
+                    <Button variant="contained" color='secondary' onClick={onProductSave} >{addEditButtontext}</Button>
+                    {!isEdit ? <Button variant="contained" color='primary'> Reset</Button> : ''}
+                    <Button variant="contained" color='default' onClick={() => window.location.href = '/Product'}> Cancle</Button>
                 </div>
             </div>
         </div >

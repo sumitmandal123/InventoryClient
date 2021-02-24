@@ -24,6 +24,9 @@ function Router(params) {
                 <Route path="/Add/Product">
                     <ProductAdd></ProductAdd>
                 </Route>
+                <Route path="/Edit/Product/:id">
+                    <ProductAdd></ProductAdd>
+                </Route>
             </Switch>
         </BrowserRouter>
     );
