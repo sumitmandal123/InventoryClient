@@ -45,8 +45,10 @@ function Product() {
             sortable: false,
             width: 100,
             cellClassName: 'mouse-pointer-cursor',
-            renderCell: () => (
-                <a href="/Add/Prdouct"> <EditIcon >EditIcon</EditIcon></a>
+            renderCell: (params) => (
+
+                < a href={`/Edit/Product/${params.row.id}`}  > <EditIcon >EditIcon</EditIcon></a>
+
             )
         },
         { field: 'Barcode', headerName: 'Barcode', width: 150 },
@@ -106,7 +108,7 @@ function Product() {
 
             </div>
             <div className='productdata-outer-div'>
-                <DataGrid rows={product} columns={columns} pageSize={20} columnBuffer={2} checkboxSelection />
+                <DataGrid rows={product} columns={columns} pageSize={20} columnBuffer={2} />
                 <h1>{post.TotalGst}</h1>
             </div>
 
